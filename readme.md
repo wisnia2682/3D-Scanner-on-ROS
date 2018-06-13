@@ -5,7 +5,7 @@
 
 Steps to run the software:
 
-1. Download repository, and place it into your catkin_ws/src
+1. Download repository, and place it into your catkin_ws/src as laser_scaner
 
 2. Open terminal and copy those lines:
     
