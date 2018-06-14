@@ -1,0 +1,81 @@
+#include "ros/ros.h"
+#include <opencv2/opencv.hpp>
+#include <eigen3/Eigen/Core>
+#include <eigen3/Eigen/Dense>
+#include <iostream>
+#include "cv_bridge/cv_bridge.h"
+#include "sensor_msgs/Image.h"
+#include <image_transport/image_transport.h>
+#include <sstream>
+
+using namespace cv;
+using namespace std;
+
+typedef std::vector<Eigen::Vector2d, Eigen::aligned_allocator<Eigen::Vector2d> > vectorVector2d;
+typedef std::vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d> > vectorVector3d;
+typedef std::vector<Eigen::Vector4d, Eigen::aligned_allocator<Eigen::Vector4d> > vectorVector4d;
+
+/// Global Variables
+
+const int hsv_h_min_max = 255;
+const int hsv_s_min_max = 255;
+const int hsv_v_min_max = 255;
+const int hsv_h_max_max = 255;
+const int hsv_s_max_max = 255;
+const int hsv_v_max_max = 255;
+
+int hsv_h_min = 166;
+int hsv_s_min = 37;
+int hsv_v_min = 255;
+
+int hsv_h_max = 255;
+int hsv_s_max = 255;
+int hsv_v_max = 255;
+
+int checkerboard_size_x = 10;
+int checkerboard_size_y = 7;
+const int camera_calib_img_count = 40;
+
+
+cv::Mat temp;
+cv::Mat image;
+Eigen::Vector4d PlaneEquation;
+Eigen::Vector4d best_plane_from_points(Eigen::MatrixXd cloud_of_points);
+bool find_laser(Mat frame, vectorVector2d &TestVect2d);
+bool calculateCheckerboardVector(Mat frame, Mat cameraMatrix, Mat distCoeffs, Eigen::Vector4d &PlaneAtCheckerboard);
+bool projectImagePointsOntoPlane(const vectorVector2d &pts,
+        vectorVector3d &pts3d,
+        const cv::Mat &cameraMatrix,
+        const Eigen::Vector4d &planeEq);
+
+
+
+void imageCallback(const sensor_msgs::ImageConstPtr& msg)
+{
+    temp = cv_bridge::toCvShare(msg, "bgr8")->image;
+    std::cout<<"obraz\n";
+    
+    
+
+
+int main(int argc, char **argv)
+{
+
+    //initialize node
+      ros::init(argc, argv, "test_node"); // to nazwa noda
+
+      // node handler
+      ros::NodeHandle n;        // node handler to punkt dostepu do stworzonego noda
+
+      // subsribe topic
+      ros::Subscriber sub = n.subscribe("/cv_camera/image_raw", 1000, imageCallback);
+
+      ros::Rate loop_rate(5);
+
+      while (n.ok()) {
+       ros::spinOnce();
+       //std::cout<<"po spin\n";
+       loop_rate.sleep();
+      }
+    return 0;
+}

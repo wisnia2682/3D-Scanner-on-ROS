@@ -1,0 +1,31 @@
+source ~/catkin_ws/devel/setup.bash
+
+1 konsola roscore
+2 konsola source ~/catkin_ws/devel/setup.bash - zeby widzial wszystkie zmienne
+	  rosparam set cv_camera/device_id 0
+	  // stare rosrun cv_camera cv_camera_node
+
+
+	  //stare	3 konsola source ~/catkin_ws/devel/setup.bash
+	    rviz
+
+	    w rvizie w lewym dolnym rogu "Add" -> By topic /camera/imageEdges ->Image raw -> ok
+				     "Add" -> By topic /cv_camera/image_raw ->Image raw -> ok
+
+
+######################
+
+cd ~/catkin_ws
+
+source ~/catkin_ws/devel/setup.bash
+rosparam set cv_camera/device_id 0
+rosrun cv_camera cv_camera_node
+rosrun laser_scan cam_calib_node
+rosrun laser_scan laser_scan_node
+
+
+
+
+
+przerobic kod tak zeby nie wykonywal sie tylko jezeli ma szachownice na kamerze
+
